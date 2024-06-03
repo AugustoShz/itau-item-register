@@ -1,0 +1,100 @@
+<div class="wrapper">
+  <form nz-form
+    class="form"
+    [formGroup]="validateForm"
+    (ngSubmit)="submitForm()"
+  >
+    <nz-form-item>
+      <nz-form-label>Nome</nz-form-label>
+      <nz-form-control nzErrorTip="Por favor informe o nome do item!">
+        <input nz-input name="name" formControlName="name" type="text" placeholder="Nome"/>
+      </nz-form-control>
+    </nz-form-item>
+  
+    <nz-form-item>
+      <nz-form-label>Quantidade</nz-form-label>
+      <nz-form-control nzErrorTip="Por favor informe a unidade de medida do item!">
+        <nz-input-number-group [nzAddOnAfter]="addOnAfterTemplate" class="input-number">
+          <ng-template #addOnAfterTemplate>
+            <nz-select formControlName="unit" class="form-unit" (nzOpenChange)="customPrecision()">
+              <nz-option nzLabel="lt (Litro)" nzValue="lt"></nz-option>
+              <nz-option nzLabel="kg (Quilograma)" nzValue="kg"></nz-option>
+              <nz-option nzLabel="un (Unidade)" nzValue="un"></nz-option>
+            </nz-select>
+          </ng-template>
+          <nz-input-number
+            [nzMin]=0
+            formControlName="amount"
+            (nzBlur)="customPrecision()"
+          nz-input/>
+        </nz-input-number-group>
+      </nz-form-control>
+    </nz-form-item>
+  
+    <nz-form-item>
+      <nz-form-label>Preço</nz-form-label>
+      <nz-form-control nzErrorTip="Por favor informe o preço do item!">
+        <nz-input-number-group [nzAddOnBefore]="addOnBeforeTemplate" class="input-number">
+          <ng-template #addOnBeforeTemplate>
+            <nz-select formControlName="currency" class="form-unit" nzShowSearch>
+              <nz-option *ngFor="let option of listOfCurrencies" [nzLabel]="option.label" [nzValue]="option.value" [id]="option.value"></nz-option>
+            </nz-select>
+          </ng-template>
+          <nz-input-number 
+            formControlName="value"
+            nz-input
+            [nzMin]=0
+            [nzPrecision]=2
+          />
+        </nz-input-number-group>
+      </nz-form-control>
+    </nz-form-item>
+  
+    <nz-form-item>
+      <nz-form-label>Produto Perecível?</nz-form-label>
+      <label formControlName="isPerishable" nz-checkbox (nzCheckedChange)="onPerishableChange()"></label>
+    </nz-form-item>
+  
+    <nz-form-item>
+      <nz-form-label>Data de Validade</nz-form-label>
+      <nz-form-control  [nzErrorTip]="errorTpl">
+        <nz-date-picker formControlName="expirationDate" nzFormat="dd/MM/yyyy"></nz-date-picker>
+        <ng-template #errorTpl let-control>
+          @if (control.errors?.['required']) {
+            Por favor informe a data de validade item!
+          }
+          @if (control.errors?.['expired']) {
+            Produto expirado!
+          }
+        </ng-template>
+      </nz-form-control>
+    </nz-form-item>
+    
+    <nz-form-item>
+      <nz-form-label>Data de Fabricação</nz-form-label>
+      <nz-form-control [nzErrorTip]="errorTp2" nzErrorTip="Por favor informe a data de fabricação do item!">
+        <nz-date-picker formControlName="manufacturingDate" nzFormat="dd/MM/yyyy"></nz-date-picker>
+        <ng-template #errorTp2 let-control>
+          @if (control.errors?.['required']) {
+            Por favor informe a data de validade item!
+          }
+          @if (control.errors?.['expiration']) {
+            Data de fabricação não pode ser após expiração!
+          }
+        </ng-template>
+      </nz-form-control>
+    </nz-form-item>
+    
+    <div class="buttons">
+      <button nz-button nzType="primary">
+        @if (id) { Atualizar }
+        @else { Cadastrar }
+      </button>
+  
+      <button nz-button nzDanger (click)="cancel($event)">
+        Cancelar
+      </button>
+    </div>
+
+  </form>
+</div>

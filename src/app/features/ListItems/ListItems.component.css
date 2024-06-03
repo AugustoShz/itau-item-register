@@ -1,0 +1,9 @@
+.wrapper {
+  overflow: auto;
+}
+
+.send-request {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
